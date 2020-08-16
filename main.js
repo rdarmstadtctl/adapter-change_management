@@ -1,6 +1,6 @@
 // Update this constant with your ServiceNow credentials
 const options = {
-  url: 'yourDevServiceNowInstanceCanonicalHostname',
+  url: 'https://dev82659.service-now.com/',
   username: 'robert.darmstadt@centurylink.com',
   password: 'lrmp@27B'
 };
