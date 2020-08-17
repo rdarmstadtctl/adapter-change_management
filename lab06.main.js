@@ -181,38 +181,28 @@ healthcheck(callback) {
    * @param {ServiceNowAdapter~requestCallback} callback - The callback that
    *   handles the response.
    */
-getRecord(callback) {
+  getRecord(callback) {
       console.log("getRecord is called");
       log.info('calling getRecord method.');
 
       let callbackData = null;
-      let callbackError = null;
+      let callbackError = null;     
             
       this.connector.get((data, error) => {
           if (error) {
               callbackError = JSON.stringify(error);
               console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
-          } else {                
-                var jsonObj  = JSON.parse(data.body);
-                
-                console.log("String: " + data.statusCode);
-                console.log("String: " + jsonObj.result[0].number);
-                
-                var obj = {};
-                obj["change_ticket_number"] = jsonObj.result[0].number;
-                obj["active"]               = jsonObj.result[0].active;
-                obj["priority"]             = jsonObj.result[0].priority;
-                obj["description"]          = jsonObj.result[0].description;
-                obj["work_start"]           = jsonObj.result[0].work_start;
-                obj["work_end"]             = jsonObj.result[0].work_end;   
-                obj["change_ticket_key"]    = jsonObj.result[0].sys_id;
-
-                var arrObj = [obj];
-          }        
-      
-        return callback(arrObj, callbackError);
-      });
+          } else {
+                callbackData = JSON.stringify(data);    
+                console.log(`\nGET RESPONSE:\n${callbackData}`);
+          }
+        
+        //console.log ("callbackData: " + callbackData + " ERROR: " + callbackError);
+        //log.warn ("callbackData: " + callbackData + " ERROR: " + callbackError);
+        return callback(callbackData, callbackError);
+      });   
   }
+
 
   /**
    * @memberof ServiceNowAdapter
@@ -223,35 +213,18 @@ getRecord(callback) {
    * @param {ServiceNowAdapter~requestCallback} callback - The callback that
    *   handles the response.
    */
-postRecord(callback) {
+  postRecord(callback) {
       console.log('calling postRecord method.');
       log.info('calling postRecord method.');
-      
-      let callbackError = null;
-            
+
       this.connector.post((data, error) => {
-          if (error) {
-              callbackError = JSON.stringify(error);
-              console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
-          } else {
-                var jsonObj  = JSON.parse(data.body);
-                
-                console.log("String: " + data.statusCode);
-                console.log("String: " + jsonObj.result.number);
-                
-                var obj = {};
-                obj["change_ticket_number"] = jsonObj.result.number;
-                obj["active"]               = jsonObj.result.active;
-                obj["priority"]             = jsonObj.result.priority;
-                obj["description"]          = jsonObj.result.description;
-                obj["work_start"]           = jsonObj.result.work_start;
-                obj["work_end"]             = jsonObj.result.work_end;   
-                obj["change_ticket_key"]    = jsonObj.result.sys_id;
-          }
-      
-        return callback(obj, callbackError);
-      });
-  }
+        if (error) {
+            console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
+        }
+        console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
+    });
+
+}
 }
 
 module.exports = ServiceNowAdapter;
